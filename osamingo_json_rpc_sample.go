@@ -18,7 +18,16 @@ type (
 	}
 )
 
+type (
+	TestHandler struct{}
+	TestParams  struct{}
+	TestResult  struct {
+		Test string `json:"test"`
+	}
+)
+
 var _ (jsonrpc.Handler) = (*EchoHandler)(nil)
+var _ (jsonrpc.Handler) = (*TestHandler)(nil)
 
 func (h *EchoHandler) ServeJSONRPC(c context.Context, params *json.RawMessage) (interface{}, *jsonrpc.Error) {
 	var p EchoParams
@@ -31,8 +40,15 @@ func (h *EchoHandler) ServeJSONRPC(c context.Context, params *json.RawMessage) (
 	}, nil
 }
 
+func (h *TestHandler) ServeJSONRPC(c context.Context, params *json.RawMessage) (interface{}, *jsonrpc.Error) {
+	return TestResult{
+		Test: "test",
+	}, nil
+}
+
 func init() {
 	jsonrpc.RegisterMethod("Main.Echo", &EchoHandler{}, EchoParams{}, EchoResult{})
+	jsonrpc.RegisterMethod("TestService.Test", &TestHandler{}, TestParams{}, TestResult{})
 }
 
 func main() {
@@ -44,5 +60,3 @@ func main() {
 }
 
 // curl -d '{"jsonrpc": "2.0","method":"Main.Echo","params":{"name":"test"},"id": "243a718a-2ebb-4e32-8cc8-210c39e8a14b"}' -H "Content-Type: application/json" localhost:8080/jrpc
-
-

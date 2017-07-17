@@ -47,6 +47,9 @@ func HiHoge(h HogeHoge) HogeHoge {
 	return fuga{h}
 }
 
+// 関数の外では、キーワードではじまる宣言( var, func, など)が必要で、 := での暗黙的な宣言は利用できない
+// aa := 2
+
 func main() {
 	f := Func(func() string { return "sample" })
 	fmt.Println(f.String())
@@ -86,4 +89,19 @@ func main() {
 	h2 := Hex2{h}
 	ss = h2
 	fmt.Println(ss.String())
+
+	//q := []int{2, 3, 5, 7, 11, 13}
+	//fmt.Printf("%T", q)
+
+	aa := make([]int, 5)
+	printSlice("a", aa)
+	for i := 0; i < 10; i++ {
+		aa = append(aa, i)
+	}
+	printSlice("a", aa)
+}
+
+func printSlice(s string, x []int) {
+	fmt.Printf("%s len=%d cap=%d %v\n",
+		s, len(x), cap(x), x)
 }
